@@ -4,6 +4,7 @@ import javafx.scene.control.TextField;
 
 public class Constraints {
 
+	//METODO DE RESTRIÇOES SOMENTE NUMEROS
 	public static void setTextFieldInteger(TextField txt) {
 		txt.textProperty().addListener((obs, oldValue, newValue) -> {
 	        if (newValue != null && !newValue.matches("\\d*")) {
@@ -11,7 +12,7 @@ public class Constraints {
 	        }
 	    });
 	}
-
+   //METODO DE RESTRIÇÃO TAMANHO DO STRING
 	public static void setTextFieldMaxLength(TextField txt, int max) {
 		txt.textProperty().addListener((obs, oldValue, newValue) -> {
 	        if (newValue != null && newValue.length() > max) {

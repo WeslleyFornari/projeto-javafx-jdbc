@@ -14,10 +14,16 @@ public class DepartmentService {
 	public List<Department> findAll(){
 		
 		return depDao.findAll(); // FAZ A BUSCA NO BANCO DE DADOS
-		
-		
 	}
 	
+	public void saveOrUpdate(Department obj) {
+		if(obj.getId() == null) {
+			depDao.insert(obj);
+		}
+		else {
+			depDao.update(obj);
+		}
+	}
 
 	
 	
