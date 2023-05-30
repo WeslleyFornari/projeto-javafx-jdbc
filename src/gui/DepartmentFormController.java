@@ -25,85 +25,84 @@ import model.services.DepartmentService;
 
 public class DepartmentFormController implements Initializable {
 	
+	private Department entity;
 	
-	private Department depEntity; // INJECAO DE DEPENCIA DA CLASSE DEPARTMENT
+	private DepartmentService service;
 	
-	private DepartmentService depService;
+	private List<DataChangeListener> dataChangeListeners = new ArrayList<>();
 	
-	private List<DataChangeListener> dataChangeListDep = new ArrayList<>();
-	
-
 	@FXML
-	private TextField txtId; // CRIA OS OBJETOS CONTROLLERS DA VIEW
+	private TextField txtId;
+	
 	@FXML
 	private TextField txtName;
+	
 	@FXML
 	private Label labelErrorName;
+	
 	@FXML
 	private Button btSave;
+	
 	@FXML
 	private Button btCancel;
 	
-	// METODO SETTER DO DEPARTMENT
-	public void setDepartment(Department depEntity) {
-		this.depEntity = depEntity;
+	//SETTER
+	public void setDepartment(Department entity) {
+		this.entity = entity;
 	}
 	
-	// METODO SETTER DEPARTMENT SERVICE
-	public void setDepService(DepartmentService depService) {
-		this.depService = depService;
+	public void setDepartmentService(DepartmentService service) {
+		this.service = service;
 	}
 	
 	public void subscribeDataChangeListener(DataChangeListener listener) {
-		dataChangeListDep.add(listener);
+		dataChangeListeners.add(listener);
 	}
 	
-		
-    // CRIA OS METODOS SAVE E CANCEL
 	@FXML
 	public void onBtSaveAction(ActionEvent event) {
-		if (depEntity == null) {
-			throw new IllegalStateException("Entity was null");
+		if (entity == null) {
+				throw new IllegalStateException("Entity was null");
 		}
-		if (depService == null) {
-			throw new IllegalStateException("Service was null");
+		if (service == null) {
+				throw new IllegalStateException("Service was null");
 		}
 		try {
-		depEntity = getFormData(); // SALVA A ENTIDADE
-		depService.saveOrUpdate(depEntity); // SALVA A ENTIDADE
-		notifyDataChangeListeners();
-		Utils.currentStage(event).close();; // FECHA A JANELA ATUAL VIEW
+			entity = getFormData();
+		    service.saveOrUpdate(entity);
+		    notifyDataChangeListeners();
+		    Utils.currentStage(event).close(); //FECHA A JANELA SOBREPOSTA ATUAL
 		}
-		catch (ValidationException e) {
+		catch (ValidationException e ) {
 			setErrorMessages(e.getErrors());
 		}
 		catch (DbException e) {
-			Alerts.showAlert("Error save object",null, e.getMessage(), AlertType.ERROR);
+			Alerts.showAlert("Error ao salvar objeto", null, e.getMessage(), AlertType.ERROR);
 		}
+		
 	}
+	
 	private void notifyDataChangeListeners() {
-		for (DataChangeListener listener : dataChangeListDep) {
+		for (DataChangeListener listener : dataChangeListeners) {
 			listener.onDataChanged();
 		}
 		
 	}
 
-	//PEGA OS DADOS ID E NAME DO FORMULARIO -> ENTITY
 	private Department getFormData() {
-		Department obj = new Department(); // CRIA OBJETO DEPARTMENT VAZIO
+		Department obj = new Department();
 		
-		ValidationException exception = new ValidationException("Erro de vallidação"); //INSTANCIA UMA EXCEÇÃO
+		ValidationException exception = new ValidationException("Validation error");
 		
 		obj.setId(Utils.tryParseToInt(txtId.getText()));
 		
-		//CONDICÃO - NOME NÃO PODE SER NULO OU VAZIO
 		if (txtName.getText() == null || txtName.getText().trim().equals("")) {
-		exception.addErrors("name", "Campo não pode ser vazio"); // LANÇA A EXCEÇÃO
+			exception.addErrors("name", "Campo não pode ser vazio");
 		}
 		obj.setName(txtName.getText());
 		
 		if (exception.getErrors().size() > 0) {
-			throw exception; // LANÇA EXCEÇÃO
+			throw exception;
 		}
 		
 		return obj;
@@ -111,40 +110,39 @@ public class DepartmentFormController implements Initializable {
 
 	@FXML
 	public void onBtCancelAction(ActionEvent event) {
-		Utils.currentStage(event).close();; // FECHA A JANELA ATUAL VIEW
+		 Utils.currentStage(event).close(); //FECHA A JANELA SOBREPOSTA ATUAL
 	}
 	
+
+	@Override 
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		initializeNodes(); 
+		
+	}
 	
-	//METODO PUBLICO INITIALIZE
-	@Override
-	public void initialize(URL url, ResourceBundle rb) {
-		initializeNodes(); //CHAMA O METODO ESPECIFICO
+	//RESTRIÇÕES
+	private void initializeNodes() {
+		Constraints.setTextFieldInteger(txtId);
+		Constraints.setTextFieldMaxLength(txtName, 30);
 	}
 
-	private void initializeNodes() {
-		Constraints.setTextFieldInteger(txtId); //CHAMA A RESTRIÇÃO CONTRAINTS ID NUMERO
-		Constraints.setTextFieldMaxLength(txtName, 30); // CHAMA A CLASSE DE RESTRIÇÃO CONSTRAINTS
-	}
-	
-	//UPDATE METODO DE ADIÇÃO
-	
 	public void updateFormData() {
-		if(depEntity == null) {
-			throw new IllegalStateException("DepEntity estava nula"); //TRATAMENTO DA EXCEÇÃO
+		if (entity == null) {
+			throw new IllegalStateException("Entity was null");
 		}
-		txtId.setText(String.valueOf(depEntity.getId())); //UPDATE ID
-		txtName.setText(depEntity.getName());             //UPDATE NAME
+		txtId.setText(String.valueOf(entity.getId()));
+		txtName.setText(entity.getName());
 	}
-	
-	// CRIA O METODO MENSAGEM DE ERRO
+
 	private void setErrorMessages(Map<String, String> errors) {
-		Set<String> fields = errors.keySet(); // INSTANCIA UMA LISTA DO TIPO SET
+		Set<String> fields = errors.keySet();
 		
 		if (fields.contains("name")) {
 			labelErrorName.setText(errors.get("name"));
 		}
 	}
-
-		
 	
+	
+	
+
 }

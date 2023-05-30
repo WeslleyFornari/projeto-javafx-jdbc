@@ -17,60 +17,67 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import model.services.DepartmentService;
+import model.services.SellerService;
 
-public class MainViewController implements Initializable{
-	
+public class MainViewController implements Initializable {
+
 	@FXML
 	private MenuItem menuItemSeller;
+	
 	@FXML
 	private MenuItem menuItemDeparment;
+	
 	@FXML
 	private MenuItem menuItemAbout;
 	
 	public void onMenuItemSellerAction() {
-		System.out.println("MenuItemSeller OK!");
+		loadView("/gui/SellerList.fxml", (SellerListController controller) -> {
+		    controller.setSellerService(new SellerService());
+			controller.updateTableView();
+		});
 	}
 	
 	public void onMenuItemDepartmentAction() {
 		loadView("/gui/DepartmentList.fxml", (DepartmentListController controller) -> {
-			controller.setDepartmentService(new DepartmentService());
-			controller.upDateTableView();
-			
+		    controller.setDepartmentService(new DepartmentService());
+			controller.updateTableView();
 		});
 	}
 	
-	public void onMenuItemSellerAbout() {
+	public void onMenuItemAboutAction() {
 		loadView("/gui/About.fxml", x -> {});
 	}
 	
+	
+	
+	
 	@Override
 	public void initialize(URL uri, ResourceBundle rb) {
+		// TODO Auto-generated method stub
 		
 	}
 	
-	// METODO LOADVIEW
 	private synchronized <T> void loadView(String absoluteName, Consumer<T> initializingAction) {
 		try {
-		     FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
-		     VBox newVbox = loader.load();
+		FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
+		VBox newVBox = loader.load();
 		
-		     Scene mainScene = Main.getMainScene();
-		     VBox mainVbox = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
-		     
-		     Node mainMenu = mainVbox.getChildren().get(0);
-		     mainVbox.getChildren().clear();
-		     mainVbox.getChildren().addAll( mainMenu);
-		     mainVbox.getChildren().addAll(newVbox.getChildren());
-		     
-		     T controller = loader.getController();
-		     initializingAction.accept(controller);
-		     
-		    
+		Scene mainScene = Main.getMainScene();
+		VBox mainVBox = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
+		
+		Node mainMenu = mainVBox.getChildren().get(0);
+		mainVBox.getChildren().clear();
+		mainVBox.getChildren().add(mainMenu);
+		mainVBox.getChildren().addAll(newVBox.getChildren());
+		
+		T controller = loader.getController();
+		initializingAction.accept(controller);
+		
+				
 		}
 		catch (IOException e) {
-			Alerts.showAlert("IO Exception", "ERROR Loading", e.getMessage(), AlertType.ERROR);
+			Alerts.showAlert("IO Exception", "Error carregando a Tela", e.getMessage() , AlertType.ERROR);
 		}
-		
-			
 	}
+	
 }

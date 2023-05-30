@@ -19,10 +19,10 @@ public class Alerts {
 	public static Optional<ButtonType> showConfirmation(String title, String content) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle(title);
-		alert.setHeaderText(null);
-		alert.setContentText(content);
-		return alert.showAndWait();
-		}
+	    alert.setHeaderText(null);
+	    alert.setContentText(content);
+	    return alert.showAndWait();
+	}
 
 
 }

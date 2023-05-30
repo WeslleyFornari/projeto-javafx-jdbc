@@ -9,14 +9,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
-
-// CLASSE RESPONSAVEL POR INICIAR E ENCERRAR TODAS AS CONEXOES AO MYSQL
-
 public class DB {
 
-	private static Connection conn = null; //CRIA O OBJETO DE CONEXAO
+	private static Connection conn = null;
 	
-	//CRIA O METODO QUE INICIA A CONEXÃO
 	public static Connection getConnection() {
 		if (conn == null) {
 			try {
@@ -31,7 +27,6 @@ public class DB {
 		return conn;
 	}
 	
-	// METODO PARA ENCERRAR A CONEXÃO
 	public static void closeConnection() {
 		if (conn != null) {
 			try {
@@ -42,7 +37,6 @@ public class DB {
 		}
 	}
 	
-	// CARREGA AS CONFIGURAÇÕES DE USER E PASSWORD PARA CONECTAR AO MYSQL
 	private static Properties loadProperties() {
 		try (FileInputStream fs = new FileInputStream("db.properties")) {
 			Properties props = new Properties();
@@ -54,7 +48,6 @@ public class DB {
 		}
 	}
 	
-	// ENCERRA A CLASSE STATEMENT
 	public static void closeStatement(Statement st) {
 		if (st != null) {
 			try {
@@ -64,8 +57,7 @@ public class DB {
 			}
 		}
 	}
-    
-	// ENCERRA A CLASSE RESULTSET
+
 	public static void closeResultSet(ResultSet rs) {
 		if (rs != null) {
 			try {
