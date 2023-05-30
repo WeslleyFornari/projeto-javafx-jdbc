@@ -20,14 +20,24 @@ public class Utils {
 	public static Stage currentStage(ActionEvent event) {
 		return (Stage) ((Node) event.getSource()).getScene().getWindow();
 	}
-
+    
+	// TRANSFORMA O NUMERO INTEIRO EM STRING
 	public static Integer tryParseToInt(String str) {
 		try {
 			return Integer.parseInt(str);
 		} catch (NumberFormatException e) {
-			return null;
+			return null; // RETORNA NULO
 		}
 	}
+	
+	// TRANSFORMA UM DOOUBLE EM STRING
+		public static Double tryParseToDouble(String str) {
+			try {
+				return Double.parseDouble(str);
+			} catch (NumberFormatException e) {
+				return null; // RETORNA NULO
+			}
+		}
 
 	// FORMATA A DATA NA TABELA
 	public static <T> void formatTableColumnDate(TableColumn<T, Date> tableColumn, String format) {
