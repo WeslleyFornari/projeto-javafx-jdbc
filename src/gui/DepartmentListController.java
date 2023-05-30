@@ -100,7 +100,7 @@ public class DepartmentListController implements Initializable, DataChangeListen
 
 			DepartmentFormController controller = loader.getController();
 			controller.setDepartment(obj);
-			controller.setDepartmentService(new DepartmentService());
+			controller.setDepartmentService(new DepartmentService());			
 			controller.subscribeDataChangeListener(this);
 			controller.updateFormData();
 
@@ -113,6 +113,7 @@ public class DepartmentListController implements Initializable, DataChangeListen
 			dialogStage.showAndWait();
 
 		} catch (IOException e) {
+			e.printStackTrace();
 			Alerts.showAlert("IO EXCEPTION", " Erro carregando a tela", e.getMessage(), AlertType.ERROR);
 		}
 
